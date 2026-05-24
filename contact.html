@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GA Practice - Contact</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f5f5f5; color: #333; }
+        nav { background: #1a73e8; padding: 1rem; text-align: center; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; }
+        .container { max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        input, textarea, select { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #dadce0; border-radius: 4px; font-size: 16px; }
+        button { width: 100%; padding: 12px; background: #34a853; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #2e7d32; }
+    </style>
+</head>
+<body>
+
+<<nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="contact.html">Contact</a>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h1>Contact Form</h1>
+        <p>Practice <code>form_start</code> and <code>form_submit</code> tracking.</p>
+        
+        <form id="contactForm" onsubmit="handleSubmit(event)">
+            <label>Name</label>
+            <input type="text" id="name" required onfocus="trackFormStart()">
+            
+            <label>Email</label>
+            <input type="email" id="email" required>
+            
+            <label>Inquiry Type</label>
+            <select id="inquiryType">
+                <option value="general">General Question</option>
+                <option value="support">Technical Support</option>
+                <option value="sales">Sales</option>
+            </select>
+            
+            <label>Message</label>
+            <textarea rows="4" id="message"></textarea>
+            
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    let formStarted = false;
+
+    function trackFormStart() {
+        if (!formStarted) {
+            formStarted = true;
+            gtag('event', 'form_start', {
+                form_id: 'contact_form',
+                form_name: 'Contact Us',
+                form_destination: 'thank_you_page'
+            });
+            console.log('Form start tracked');
+        }
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        
+        const inquiry = document.getElementById('inquiryType').value;
+        
+        gtag('event', 'form_submit', {
+            form_id: 'contact_form',
+            form_name: 'Contact Us',
+            inquiry_type: inquiry,
+            event_callback: function() {
+                alert(`Form submitted! Inquiry type: ${inquiry}\nCheck your GA4 Real-Time dashboard.`);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

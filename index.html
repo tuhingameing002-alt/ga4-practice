@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GA Practice - Home</title>
+    
+    <!-- ========================================== -->
+    <!-- GOOGLE ANALYTICS 4 TAG - REPLACE WITH YOUR ID -->
+    <!-- ========================================== -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        
+        gtag('config', 'G-XXXXXXXXXX', {
+            'page_title': document.title,
+            'page_location': window.location.href,
+            'send_page_view': true
+        });
+    </script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f5f5f5; color: #333; line-height: 1.6; }
+        nav { background: #1a73e8; padding: 1rem; text-align: center; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: 500; }
+        nav a:hover { text-decoration: underline; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        h1 { color: #1a73e8; margin-bottom: 1rem; }
+        .btn { display: inline-block; padding: 12px 24px; margin: 8px 4px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; transition: transform 0.2s; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn-primary { background: #1a73e8; color: white; }
+        .btn-success { background: #34a853; color: white; }
+        .btn-danger { background: #ea4335; color: white; }
+        .status { padding: 1rem; background: #e8f0fe; border-left: 4px solid #1a73e8; margin: 1rem 0; border-radius: 4px; }
+        code { background: #f1f3f4; padding: 2px 6px; border-radius: 3px; font-family: monospace; color: #d93025; }
+        .event-log { background: #202124; color: #e8eaed; padding: 1rem; border-radius: 4px; font-family: monospace; font-size: 13px; max-height: 200px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+
+<<nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="contact.html">Contact</a>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h1>Google Analytics Practice Lab</h1>
+        <p>This demo site helps you practice GA4 implementation. Open your browser's <strong>Developer Console</strong> and the <strong>GA4 Real-Time dashboard</strong> to see events fire live.</p>
+        
+        <div class="status">
+            <strong>Your Task:</strong> Replace <code>G-XXXXXXXXXX</code> in the HTML source with your actual GA4 Measurement ID, then refresh this page.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Basic Event Tracking</h2>
+        <p>Click these buttons to practice sending custom events to GA4:</p>
+        
+        <button class="btn btn-primary" onclick="trackEvent('cta_click', 'hero_section', 'get_started')">
+            Get Started (CTA)
+        </button>
+        
+        <button class="btn btn-success" onclick="trackEvent('generate_lead', 'signup_form', 'newsletter')">
+            Sign Up Newsletter
+        </button>
+        
+        <button class="btn btn-danger" onclick="trackEvent('exception', 'error_sim', 'demo_error')">
+            Simulate Error
+        </button>
+        
+        <button class="btn btn-primary" onclick="trackDownload()">
+            Download PDF
+        </button>
+
+        <div style="margin-top: 1rem;">
+            <strong>Event Log:</strong>
+            <div class="event-log" id="eventLog">Waiting for events...</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>E-Commerce Events</h2>
+        <p>Practice e-commerce tracking (view_item, add_to_cart, purchase):</p>
+        
+        <button class="btn btn-primary" onclick="trackEcommerce('view_item')">
+            View Item
+        </button>
+        <button class="btn btn-success" onclick="trackEcommerce('add_to_cart')">
+            Add to Cart
+        </button>
+        <button class="btn btn-primary" onclick="trackEcommerce('purchase')" style="background:#f9ab00;">
+            Complete Purchase
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>Custom User Properties</h2>
+        <p>Set user-level custom dimensions:</p>
+        <button class="btn btn-primary" onclick="setUserProperties()">
+            Set User Type = "Student"
+        </button>
+    </div>
+</div>
+
+<script>
+    function logEvent(message) {
+        const log = document.getElementById('eventLog');
+        const time = new Date().toLocaleTimeString();
+        log.innerHTML = `[${time}] ${message}<br>` + log.innerHTML;
+        console.log(`[GA4 Event] ${message}`);
+    }
+
+    function trackEvent(eventName, eventCategory, eventLabel) {
+        gtag('event', eventName, {
+            event_category: eventCategory,
+            event_label: eventLabel,
+            value: 1
+        });
+        logEvent(`Sent: ${eventName} | Category: ${eventCategory} | Label: ${eventLabel}`);
+    }
+
+    function trackDownload() {
+        gtag('event', 'file_download', {
+            file_name: 'demo-guide.pdf',
+            file_extension: 'pdf',
+            link_url: '/downloads/demo-guide.pdf',
+            link_text: 'Download Practice Guide'
+        });
+        logEvent('Sent: file_download | File: demo-guide.pdf');
+    }
+
+    function trackEcommerce(eventName) {
+        const item = {
+            item_id: 'SKU_12345',
+            item_name: 'GA4 Practice Course',
+            item_category: 'Education',
+            price: 49.99,
+            quantity: 1
+        };
+
+        const params = {
+            currency: 'USD',
+            value: 49.99,
+            items: [item]
+        };
+
+        if (eventName === 'purchase') {
+            params.transaction_id = 'T_' + Date.now();
+            params.tax = 4.00;
+            params.shipping = 5.00;
+        }
+
+        gtag('event', eventName, params);
+        logEvent(`Sent: ${eventName} | Value: $49.99 | Item: GA4 Practice Course`);
+    }
+
+    function setUserProperties() {
+        gtag('set', 'user_properties', {
+            user_type: 'student',
+            practice_level: 'beginner'
+        });
+        logEvent('Set user_properties: user_type = student');
+    }
+
+    let scrollDepths = [25, 50, 75, 90];
+    let triggeredDepths = [];
+    
+    window.addEventListener('scroll', () => {
+        const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+        
+        scrollDepths.forEach(depth => {
+            if (scrollPercent >= depth && !triggeredDepths.includes(depth)) {
+                triggeredDepths.push(depth);
+                gtag('event', 'scroll', {
+                    percent_scrolled: depth,
+                    page_path: window.location.pathname
+                });
+                logEvent(`Sent: scroll | Depth: ${depth}%`);
+            }
+        });
+    });
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const timing = performance.timing;
+            const loadTime = timing.loadEventEnd - timing.navigationStart;
+            gtag('event', 'page_load_time', {
+                value: loadTime,
+                page_path: window.location.pathname
+            });
+        }, 0);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GA Practice - Products</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f5f5f5; color: #333; }
+        nav { background: #1a73e8; padding: 1rem; text-align: center; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 1.5rem; }
+        .product { border: 1px solid #dadce0; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; display: flex; justify-content: space-between; align-items: center; }
+        .btn { padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<<nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="contact.html">Contact</a>
+</nav>
+
+<div class="container">
+    <div class="card">
+        <h1>Products Page</h1>
+        <p>This page practices <code>view_item_list</code> and <code>select_item</code> e-commerce events.</p>
+    </div>
+
+    <div class="card">
+        <h2>Course Catalog</h2>
+        
+        <div class="product">
+            <div>
+                <h3>GA4 Fundamentals</h3>
+                <p>$49.99 - Learn the basics of Google Analytics 4</p>
+            </div>
+            <button class="btn" onclick="selectItem('ga4_fundamentals', 'GA4 Fundamentals', 49.99)">
+                View Details
+            </button>
+        </div>
+        
+        <div class="product">
+            <div>
+                <h3>Advanced GTM</h3>
+                <p>$99.99 - Master Google Tag Manager</p>
+            </div>
+            <button class="btn" onclick="selectItem('gtm_advanced', 'Advanced GTM', 99.99)">
+                View Details
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    gtag('event', 'view_item_list', {
+        item_list_name: 'Course Catalog',
+        item_list_id: 'courses_001',
+        items: [
+            { item_id: 'ga4_fundamentals', item_name: 'GA4 Fundamentals', price: 49.99, item_category: 'Courses' },
+            { item_id: 'gtm_advanced', item_name: 'Advanced GTM', price: 99.99, item_category: 'Courses' }
+        ]
+    });
+
+    function selectItem(id, name, price) {
+        gtag('event', 'select_item', {
+            item_list_name: 'Course Catalog',
+            items: [{ item_id: id, item_name: name, price: price, item_category: 'Courses' }]
+        });
+        alert(`Sent select_item for: ${name}`);
+    }
+</script>
+
+</body>
+</html>
